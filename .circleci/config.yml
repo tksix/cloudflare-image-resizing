@@ -1,0 +1,26 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@7.1.0
+  codecov: codecov/codecov@5.4.3
+
+jobs:
+  build_and_test:
+    resource_class: small
+    executor: node/default
+    steps:
+      - checkout
+      - run:
+          name: Upgrade npm
+          command: npm install npm@11.4.1
+      - run: rm -rf node_modules package-lock.json
+      - run: npm install
+      - run:
+          command: npm run test
+          name: Run tests
+      - codecov/upload
+
+workflows:
+  test_my_app:
+    jobs:
+      - build_and_test
